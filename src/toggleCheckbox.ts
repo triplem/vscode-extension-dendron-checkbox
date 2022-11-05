@@ -144,6 +144,12 @@ const markField = (
       if (dateWhenChecked) {
         newText = newText.replace(/\s+\[[^[]+?\]$/, '') + whitespace;
       }
+      if (personWhenChecked) {
+        newText = newText.replace(/\s+\[[^[]+?\]$/, '') + whitespace
+      }
+      if (reasonWhenChecked) {
+        newText = newText.replace(/\s+\[[^[]+?\]$/, '') + whitespace
+      }
 
       editBuilder.replace(
         new Range(

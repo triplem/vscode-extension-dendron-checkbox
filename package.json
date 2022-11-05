@@ -2,7 +2,7 @@
   "name": "markdown-checkbox",
   "displayName": "Markdown Checkbox",
   "description": "With this extension you can create checkboxes in markdown and mark them quickly.",
-  "version": "1.10.0",
+  "version": "1.10.1",
   "publisher": "triplem",
   "author": {
     "name": "Markus M. May",
@@ -290,7 +290,7 @@
   },
   "__metadata": {
     "id": "f0b7de7d-8e14-44df-998a-630ffdb32cf8",
-    "publisherDisplayName": "Philipp Kief",
+    "publisherDisplayName": "Markus M. May",
     "publisherId": "f9e5bc2f-fea1-4075-917f-d83e01e69f56",
     "isPreReleaseVersion": false
   }
