@@ -17,6 +17,7 @@ const createCheckboxOfLine = (
 ): Thenable<boolean> => {
   const withBulletPoint = helpers.getConfig<boolean>('withBulletPoint');
   const typeOfBulletPoint = helpers.getConfig<string>('typeOfBulletPoint');
+  const withDueDate = helpers.getConfig<boolean>('dueDateWhenCreated');
   const hasBullet = helpers.lineHasBulletPointAlready(line);
 
   const checkboxOfLine = helpers.getCheckboxOfLine(line);
@@ -27,7 +28,8 @@ const createCheckboxOfLine = (
       editBuilder.insert(
         new Position(line.lineNumber, hasBullet.pos),
         (withBulletPoint && !hasBullet.bullet ? typeOfBulletPoint + ' ' : '') +
-          checkboxCharacters
+          checkboxCharacters + 
+        (withDueDate ? ' due: ' : '')  
       );
     } else {
       editBuilder.delete(

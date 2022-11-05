@@ -2,13 +2,20 @@
   "name": "markdown-checkbox",
   "displayName": "Markdown Checkbox",
   "description": "With this extension you can create checkboxes in markdown and mark them quickly.",
-  "version": "1.8.1",
-  "publisher": "PKief",
+  "version": "1.10.0",
+  "publisher": "triplem",
   "author": {
-    "name": "Philipp Kief",
-    "email": "philipp.kief@gmx.de",
-    "url": "https://pkief.github.io"
+    "name": "Markus M. May",
+    "email": "triplem@javafreedom.org",
+    "url": "https://triplem.github.io"
   },
+  "contributors": [
+    {
+      "name": "Philipp Kief",
+      "email": "philipp.kief@gmx.de",
+      "url": "https://pkief.github.io"
+    }
+  ],
   "engines": {
     "vscode": "^1.22.1"
   },
@@ -76,15 +83,65 @@
     "keybindings": [
       {
         "command": "markdown-checkbox.createCheckbox",
-        "key": "ctrl+shift+c",
-        "mac": "cmd+shift+c",
+        "key": "alt+c",
+        "mac": "alt+c",
         "when": "editorTextFocus"
       },
       {
         "command": "markdown-checkbox.markCheckbox",
-        "key": "ctrl+shift+enter",
-        "mac": "cmd+shift+enter",
-        "when": "editorTextFocus"
+        "key": "alt+x",
+        "mac": "alt+x",
+        "when": "editorTextFocus && resourceLangId == markdown",
+        "args": "x"
+      },
+      {
+        "command": "markdown-checkbox.markCheckbox",
+        "key": "alt+w",
+        "mac": "alt+w",
+        "when": "editorTextFocus && resourceLangId == markdown",
+        "args": "w"
+      },
+      {
+        "command": "markdown-checkbox.markCheckbox",
+        "key": "alt+a",
+        "mac": "alt+a",
+        "when": "editorTextFocus && resourceLangId == markdown",
+        "args": "a"
+      },
+      {
+        "command": "markdown-checkbox.markCheckbox",
+        "key": "alt+m",
+        "mac": "alt+m",
+        "when": "editorTextFocus && resourceLangId == markdown",
+        "args": "m"
+      },
+      {
+        "command": "markdown-checkbox.markCheckbox",
+        "key": "alt+b",
+        "mac": "alt+b",
+        "when": "editorTextFocus && resourceLangId == markdown",
+        "args": "b"
+      },
+      {
+        "command": "markdown-checkbox.markCheckbox",
+        "key": "alt+l",
+        "mac": "alt+l",
+        "when": "editorTextFocus && resourceLangId == markdown",
+        "args": "l"
+      },
+      {
+        "command": "markdown-checkbox.markCheckbox",
+        "key": "alt+d",
+        "mac": "alt+d",
+        "when": "editorTextFocus && resourceLangId == markdown",
+        "args": "d"
+      },
+      {
+        "command": "markdown-checkbox.markCheckbox",
+        "key": "alt+y",
+        "mac": "alt+y",
+        "when": "editorTextFocus && resourceLangId == markdown",
+        "args": "y"
       }
     ],
     "menus": {
@@ -126,37 +183,77 @@
             "-",
             "+"
           ],
-          "default": "*",
+          "default": "-",
           "description": "Bullet point character."
         },
+        "markdown-checkbox.checkmark": {
+          "type": "string",
+          "enum": [
+            "x",
+            "w",
+            "a",
+            "m",
+            "b",
+            "l",
+            "d",
+            "y"
+          ],
+          "enumDescriptions": [
+            "Marks Checkbox as done",
+            "Marks Checkbox as wip",
+            "Marks Checkbox as assigned",
+            "Marks Checkbox as moved",
+            "Marks Checkbox as blocked",
+            "Marks Checkbox as delegated",
+            "Marks Checkbox as dropped",
+            "Marks Checkbox as pending"
+          ],
+          "default": "x"
+        },
         "markdown-checkbox.strikeThroughWhenChecked": {
-          "type": "boolean",
-          "default": true,
-          "description": "Strike through the line of the checkbox after checked."
+          "type": "array",
+          "default": ["x", "d"],
+          "description": "Strike through the line of the checkbox after checked on selected values."
         },
         "markdown-checkbox.italicWhenChecked": {
-          "type": "boolean",
-          "default": true,
-          "description": "Italic font style of line of the checkbox after the checkbox has been checked."
+          "type": "array",
+          "default": ["x", "m", "d"],
+          "description": "Italic font style of line of the checkbox after the checkbox has been checked on selected values."
         },
         "markdown-checkbox.dateWhenChecked": {
+          "type": "array",
+          "default": ["x", "d"],
+          "description": "Add date behind the checkbox item after the checkbox has been checked on selected values."
+        },
+        "markdown-checkbox.dueDateWhenCreated": {
           "type": "boolean",
-          "default": true,
-          "description": "Add date behind the checkbox item after the checkbox has been checked."
+          "default": false,
+          "description": "Add due date the checkbox item after the checkbox has been created."
         },
         "markdown-checkbox.showStatusBarItem": {
           "type": "boolean",
           "default": true,
           "description": "Show the amount of selected checkboxes in the status bar."
         },
-        "markdown-checkbox.checkmark": {
+        "markdown-checkbox.toPersonWhenChecked": {
+          "type": "array",
+          "default": ["a", "l"],
+          "description": "Add person text behind the checkbox item after the checkbox has been checked on selected values."
+        },
+        "markdown-checkbox.personText": {
           "type": "string",
-          "enum": [
-            "X",
-            "x"
-          ],
-          "default": "X",
-          "description": "Checkmark of the checkbox."
+          "default": "Person",
+          "description": "Add person text behind the checkbox item after the checkbox has been checked on selected values."
+        },
+        "markdown-checkbox.reasonWhenChecked": {
+          "type": "array",
+          "default": ["m", "b", "d"],
+          "description": "Add reason text behind the checkbox item after the checkbox has been checked on selected values."
+        },
+        "markdown-checkbox.reasonText": {
+          "type": "string",
+          "default": "Reason",
+          "description": "Text to show if reasonWhenChecked is true."
         },
         "markdown-checkbox.dateFormat": {
           "type": "string",

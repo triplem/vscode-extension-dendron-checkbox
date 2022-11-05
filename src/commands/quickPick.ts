@@ -1,5 +1,5 @@
 import * as vscode from 'vscode';
-import { getAllCheckboxes, getEditor } from '../helpers';
+import { getAllCheckboxes, getConfig, getEditor } from '../helpers';
 import { Checkbox } from '../models/checkbox';
 import { toggleCheckboxOfLine } from '../toggleCheckbox';
 
@@ -54,13 +54,13 @@ const handleQuickPickActions = async (
   // check the checked items by the quickpick
   for (const lineNumber of linesToCheck) {
     const line = editor.document.lineAt(lineNumber);
-    await toggleCheckboxOfLine(line, true);
+    await toggleCheckboxOfLine(line, getConfig<string>('checkmark'), true);
   }
 
   // uncheck the items that are not returned by the quick pick
   for (const lineNumber of linesToUncheck) {
     const line = editor.document.lineAt(lineNumber);
-    await toggleCheckboxOfLine(line, false);
+    await toggleCheckboxOfLine(line, getConfig<string>('checkmark'), false);
   }
 };
 

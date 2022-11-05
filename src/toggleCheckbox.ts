@@ -4,13 +4,13 @@ import * as helpers from './helpers';
 const moment = require('moment');
 
 /** Mark a checkbox as checked or unchecked */
-export const toggleCheckbox = async () => {
+export const toggleCheckbox = async (checkmark: string = helpers.getConfig<string>('checkmark')) => {
   // the position object gives you the line and character where the cursor is
   const editor = helpers.getEditor();
   if (editor.selection.isEmpty) {
     const cursorPosition = helpers.getCursorPosition();
     const line = editor.document.lineAt(cursorPosition.line);
-    await toggleCheckboxOfLine(line);
+    await toggleCheckboxOfLine(line, checkmark);
     const endLine = editor.document.lineAt(editor.selection.end.line);
     const selectionPosition = new vscode.Position(endLine.lineNumber, 20000);
     helpers.getEditor().selection = new vscode.Selection(
@@ -23,7 +23,7 @@ export const toggleCheckbox = async () => {
     // get all line numbers of the selection
     for (let r = selection.start.line; r <= selection.end.line; r++) {
       const line = editor.document.lineAt(r);
-      await toggleCheckboxOfLine(line);
+      await toggleCheckboxOfLine(line, checkmark);
     }
   }
 };
@@ -31,6 +31,7 @@ export const toggleCheckbox = async () => {
 /** mark or unmark the checkbox of a given line in the editor */
 export const toggleCheckboxOfLine = (
   line: vscode.TextLine,
+  checkmark: string,
   checkIt?: boolean
 ) => {
   const checkbox = helpers.getCheckboxOfLine(line);
@@ -48,19 +49,19 @@ export const toggleCheckboxOfLine = (
 
   // if the checkbox is not checked or it must be checked
   if (checkIt === true || (checkIt === undefined && !checkbox.checked)) {
-    value = helpers.getConfig<string>('checkmark');
+    value = checkmark;
   }
 
-  return markField(checkbox.position, value);
+  return markField(checkbox.position, value, checkmark);
 };
 
 /** Marks the field inside the checkbox with a character */
 const markField = (
   checkboxPosition: Position,
-  replacement: string
+  replacement: string,
+  checkmark: string
 ): Thenable<boolean> => {
   const editor = helpers.getEditor();
-  const checkmark = helpers.getConfig<string>('checkmark');
 
   return editor.edit((editBuilder: TextEditorEdit) => {
     editBuilder.replace(
@@ -76,24 +77,35 @@ const markField = (
     );
 
     // get settings from config
-    const italicWhenChecked = helpers.getConfig<boolean>('italicWhenChecked');
-    const strikeThroughWhenChecked = helpers.getConfig<boolean>(
+    const italicWhenCheckedArray = helpers.getConfig<Array<string>>('italicWhenChecked');
+    const italicWhenChecked = italicWhenCheckedArray.includes(checkmark);
+    const strikeThroughWhenCheckedArray = helpers.getConfig<Array<string>>(
       'strikeThroughWhenChecked'
     );
-    const dateWhenChecked = helpers.getConfig<boolean>('dateWhenChecked');
+    const strikeThroughWhenChecked = strikeThroughWhenCheckedArray.includes(checkmark);
+    const dateWhenCheckedArray = helpers.getConfig<Array<string>>('dateWhenChecked');
+    const dateWhenChecked = dateWhenCheckedArray.includes(checkmark)
     const dateFormat = helpers.getConfig<string>('dateFormat');
+
+    const personWhenCheckedArray = helpers.getConfig<Array<string>>('toPersonWhenChecked');
+    const personWhenChecked = personWhenCheckedArray.includes(checkmark);
+    const personText = helpers.getConfig<string>('personText');
+
+    const reasonWhenCheckedArray = helpers.getConfig<Array<string>>('reasonWhenChecked');
+    const reasonWhenChecked = reasonWhenCheckedArray.includes(checkmark);
+    const reasonText = helpers.getConfig<string>('reasonText');
 
     // get line of the checkbox
     const line = editor.document.lineAt(checkboxPosition.line);
     const lhc = helpers.getCheckboxOfLine(line);
     const lineText = line.text;
     const textWithoutCheckbox = lineText
-      .substr(checkboxPosition.character + 4, lineText.length)
+      .substring(checkboxPosition.character + 4, lineText.length)
       .trim();
 
     // respect trailing whitespace
     const foundTrailingWhitespace = lineText
-      .substr(checkboxPosition.character + 4, lineText.length)
+      .substring(checkboxPosition.character + 4, lineText.length)
       .match(/[\s\n\r]*$/);
     const whitespace = foundTrailingWhitespace?.join('') || '';
 
@@ -111,6 +123,12 @@ const markField = (
         newText = `${newText} [${moment(new Date()).format(
           dateFormat
         )}]${whitespace}`;
+      }
+      if (personWhenChecked) {
+        newText = `${newText} [${personText}: ]${whitespace}`
+      }
+      if (reasonWhenChecked) {
+        newText = `${newText} [${reasonText}: ]${whitespace}`
       }
 
       editBuilder.replace(
